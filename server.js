@@ -1,14 +1,17 @@
 //Load Dep
 const express = require('express')
 const mongoose = require('mongoose')
+
 const cors = require('cors')
 const logger = require('morgan')
+
 
 //require and initalize dotenv
 require('dotenv').config()
 
 //PORT conf
 const PORT = process.env.PORT
+
 
 //Initalize express
 const app = express()
@@ -23,6 +26,10 @@ app.use(logger('dev'))
 app.get('/', (req, res) => {
   res.send('Welcome to the Theme Park API!')
 })
+
+// Enable CORS for specific origin
+app.use(cors({ origin: 'http://localhost:5173' })); // Allow requests from the frontend
+
 
 //Database Configuration
 const db = require('./config/db')
