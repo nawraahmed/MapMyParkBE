@@ -12,6 +12,7 @@ const PORT = process.env.PORT
 
 //Initalize express
 const app = express()
+app.use(express.json()); 
 
 // Middleware
 app.use(express.json())
@@ -33,3 +34,10 @@ const db = require('./config/db')
 
 //listen on port
 app.listen(PORT, () => console.log(`running on port: ${PORT}`))
+
+
+//import routes
+const authRouter = require('./routes/AuthRouter')
+
+//mount routes
+app.use('/auth', authRouter)
