@@ -13,10 +13,6 @@ const TicketSchema = new Schema({
   issueDate: {
     type: Date,
     default: Date.now
-  },
-  isUsed: {
-    type: Boolean,
-    default: false
   }
 })
 
