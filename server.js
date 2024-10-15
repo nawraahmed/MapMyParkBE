@@ -12,17 +12,12 @@ const PORT = process.env.PORT
 
 //Initalize express
 const app = express()
-app.use(express.json()); 
+app.use(express.json())
 
 // Middleware
 app.use(express.json())
 app.use(cors())
 app.use(logger('dev'))
-
-const ticketRoutes = require('./routes/ticket')
-
-// Routes
-app.use('/api/tickets', ticketRoutes)
 
 // Root Route
 app.get('/', (req, res) => {
@@ -35,9 +30,12 @@ const db = require('./config/db')
 //listen on port
 app.listen(PORT, () => console.log(`running on port: ${PORT}`))
 
-
 //import routes
 const authRouter = require('./routes/AuthRouter')
+const attractionRouter = require('./routes/attraction')
+const ticketRoutes = require('./routes/ticket')
 
 //mount routes
 app.use('/auth', authRouter)
+app.use('/attraction', attractionRouter)
+app.use('/api/tickets', ticketRoutes)
