@@ -4,10 +4,10 @@ const Ticket = require('../models/Ticket')
 // controllers/ticketController.js
 const createTicket = async (req, res) => {
   try {
-    const { holderName, ticketType, price, issueDate, isUsed } = req.body
+    const { holderName, ticketType, issueDate } = req.body
 
     // Validate required fields
-    if (!holderName || !ticketType || !price) {
+    if (!holderName || !ticketType) {
       return res
         .status(400)
         .json({ message: 'Please provide all required fields.' })
@@ -16,9 +16,7 @@ const createTicket = async (req, res) => {
     const newTicket = new Ticket({
       holderName,
       ticketType,
-      price,
-      issueDate: issueDate || undefined, // Use default if not provided
-      isUsed: isUsed || false
+      issueDate: issueDate || undefined // Use default if not provided
     })
 
     const savedTicket = await newTicket.save()
