@@ -11,11 +11,11 @@ const AttractionSchema = new Schema({
     required: false
   },
   age: {
-    type: number,
+    type: Number,
     required: true
   },
   size: {
-    type: number,
+    type: Number,
     required: true
   },
   indoor: {

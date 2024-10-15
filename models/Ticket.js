@@ -10,17 +10,9 @@ const TicketSchema = new Schema({
     type: String, // e.g., 'Adult', 'Child'
     required: true
   },
-  price: {
-    type: Number,
-    required: true
-  },
   issueDate: {
     type: Date,
     default: Date.now
-  },
-  isUsed: {
-    type: Boolean,
-    default: false
   }
 })
 
