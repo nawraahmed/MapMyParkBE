@@ -1,65 +1,54 @@
-// controllers/ticketController.js
 const Ticket = require('../models/Ticket')
 
-// controllers/ticketController.js
+// Create a ticket for the logged-in user
 const createTicket = async (req, res) => {
   try {
     const { holderName, ticketType, issueDate } = req.body
-
-    // Validate required fields
-    if (!holderName || !ticketType) {
-      return res
-        .status(400)
-        .json({ message: 'Please provide all required fields.' })
-    }
+    const userId = req.user.id // Get logged-in user's ID
 
     const newTicket = new Ticket({
       holderName,
       ticketType,
-      issueDate: issueDate || undefined // Use default if not provided
+      issueDate: issueDate || undefined,
+      user: userId // Associate the ticket with the logged-in user
     })
 
     const savedTicket = await newTicket.save()
     res.status(201).json(savedTicket)
   } catch (error) {
     console.error('Error creating ticket:', error)
-    res.status(500).json({
-      message: 'Server error while creating ticket.',
-      error: error.message
-    })
+    res.status(500).json({ message: 'Server error while creating ticket.' })
   }
 }
-// Get all tickets or a single ticket by ID
-const getTickets = async (req, res) => {
-  try {
-    const { id } = req.params
 
-    if (id) {
-      // Get a single ticket by ID
-      const ticket = await Ticket.findById(id)
-      if (!ticket) {
-        return res.status(404).json({ message: 'Ticket not found.' })
-      }
-      return res.status(200).json(ticket)
-    } else {
-      // Get all tickets
-      const tickets = await Ticket.find()
-      res.status(200).json(tickets)
+// Get tickets only for the logged-in user
+const getUserTickets = async (req, res) => {
+  try {
+    const userId = req.user.id
+    const tickets = await Ticket.find({ user: userId })
+    if (!tickets) {
+      return res
+        .status(404)
+        .json({ message: 'No tickets found for this user.' })
     }
+    res.status(200).json(tickets)
   } catch (error) {
     console.error('Error fetching tickets:', error)
     res.status(500).json({ message: 'Server error while fetching tickets.' })
   }
 }
 
-// Delete a ticket by ID
+// Delete a ticket
 const deleteTicket = async (req, res) => {
   try {
     const { id } = req.params
-
+    const userId = req.user.id
     const ticket = await Ticket.findById(id)
-    if (!ticket) {
-      return res.status(404).json({ message: 'Ticket not found.' })
+
+    if (!ticket || ticket.user.toString() !== userId) {
+      return res
+        .status(404)
+        .json({ message: 'Ticket not found or not authorized.' })
     }
 
     await Ticket.findByIdAndDelete(id)
@@ -72,6 +61,6 @@ const deleteTicket = async (req, res) => {
 
 module.exports = {
   createTicket,
-  getTickets,
+  getUserTickets,
   deleteTicket
 }
